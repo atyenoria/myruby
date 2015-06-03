@@ -5,8 +5,15 @@ require "nokogiri"
 require "open-uri"
 require "cgi"
 n=0
-keyword = ARGV[0]
-num_tmp=ARGV[1]
+#本番
+# keyword = ARGV[0]
+# num_tmp=ARGV[1]
+
+#テスト
+keyword="サンプル"
+num_tmp=5
+
+
 num=num_tmp.to_i - 1
 escaped_keyword = CGI.escape(keyword)
 url="http://www.google.co.jp/search?ie=UTF-8&oe=UTF-8&q=#{escaped_keyword}"
@@ -34,12 +41,13 @@ next if "#{href}" !~ /^\/url/
 
 # puts "idx: #{idx+1}"
 # puts "domain: #{link.split("/")[2]}"
-# puts "link: #{link}"
+puts "link: #{link}"
 # puts "html: #{html}"
 # puts ""
 link=URI.unescape("#{link}")
 
-system( "chrome_tmp #{link} 1>&2 > /dev/null")
+#system( "chrome_tmp #{link} 1>&2 > /dev/null")
+
 n=n+1
 if n > num then
 	break
@@ -47,7 +55,3 @@ end
 
 
 end
-
-
-
-
