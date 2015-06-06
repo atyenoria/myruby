@@ -6,11 +6,11 @@ require "open-uri"
 require "cgi"
 n=0
 
-# keyword = ARGV[0]
-num_tmp=5
+keyword = ARGV[0]
+num_tmp=30
 
 #テスト
-keyword="てすと"
+# keyword="てすと"
 
 url_tmp = []
 
@@ -43,7 +43,7 @@ next if "#{href}" !~ /^\/url/
 # puts "idx: #{idx+1}"
 # puts "domain: #{link.split("/")[2]}"
 # puts "link: #{link}"
- puts "html: #{html}"
+# puts "html: #{html}"
 # puts ""
 link=URI.unescape("#{link}")
 
@@ -66,7 +66,7 @@ for s in 1..num do
 	
 	#puts s
 #	puts url_tmp[s]
-# system( "chrome_tmp #{url_tmp[s]} 1>&2 > /dev/null")
+ system( "chrome_tmp #{url_tmp[s]} 1>&2 > /dev/null")
 end
 
 
