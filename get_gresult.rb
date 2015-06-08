@@ -1,16 +1,33 @@
 #!/usr/bin/ruby
 # -*- encoding: utf-8 -*-
+require 'mongoid'
 require "rubygems"
 require "nokogiri"
 require "open-uri"
 require "cgi"
+require "pry"
+require "redis"
+
+Mongoid.load!("/Users/jima/myruby/mongoid.yml", :development) # <=設定ファイルの読み込み（後述）
+
+class Geturl
+  include Mongoid::Document	
+  include Mongoid::Timestamps
+  field :keyword, type: String
+  field :address, type: String
+  field :domain, type: String
+  # field :area, type: Array
+  # field :created_at, :type => DateTime, :default => lambda{Time.now}
+end
+
+
 n=0
 
 keyword = ARGV[0]
-num_tmp=30
+num_tmp=10
 
 #テスト
-# keyword="てすと"
+#keyword="てすと"
 
 url_tmp = []
 
@@ -37,6 +54,9 @@ end
 html = alink.inner_html
 end
 
+# binding.pry
+
+
 # Webサイト以外（ニュースなど）はスキップ
 next if "#{href}" !~ /^\/url/
 
@@ -47,7 +67,29 @@ next if "#{href}" !~ /^\/url/
 # puts ""
 link=URI.unescape("#{link}")
 
+tweet = {:id => 1, :user => "shin", :time => Time.now, :body => "hello redis!"}
 
+
+
+  geturl = Geturl.new
+  geturl.keyword = "#{keyword}"
+  geturl.address = "#{link}"
+  geturl.domain = "#{link.split("/")[2]}"
+  geturl.save
+
+
+
+#dev
+# tweet = {:id => 2, 
+#          :user => "shin", 
+#          :time => Time.now, 
+#          :body => "this is second tweet :-)"
+#         }
+# redis.set "msg_1", tweet.to_json
+# redis.rpush "home_1", "msg_1"
+
+
+# puts "Run Pry!"
 
 url_tmp.push(link)
 
@@ -62,11 +104,13 @@ end
 
 
 
+
+
 for s in 1..num do
 	
 	#puts s
 #	puts url_tmp[s]
- system( "chrome_tmp #{url_tmp[s]} 1>&2 > /dev/null")
+  system( "chrome_tmp #{url_tmp[s]} 1>&2 > /dev/null")
 end
 
 

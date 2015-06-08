@@ -1,0 +1,21 @@
+
+development:
+  sessions:
+    default:
+      database: mongoid_development
+      hosts:
+      - 127.0.0.1:27017
+production::
+  sessions:
+    default:
+      database: mongoid_production
+      hosts:
+      - 192.168.100.1:27017
+      username: production_user
+      password: p@ssw0rd
+test:
+  sessions:
+    default:                                                                                                                                                                     
+      database: mongoid_test
+      hosts:
+      - localhost:27017
