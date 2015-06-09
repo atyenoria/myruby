@@ -3,7 +3,10 @@ require "json"
 require "redis-objects"
 require "rubygems"
 require "active_record"
-
+require'redis-namespace'
+require 'date'
+require 'net/http'
+require 'json'
 
 ActiveRecord::Base.establish_connection(
   adapter:  "mysql2",
@@ -12,6 +15,28 @@ ActiveRecord::Base.establish_connection(
   password: "am",
   database: "word_press",
 )
+
+
+# class User < ActiveRecord::Base
+
+#   def push_notice(object, date)
+#     l = Redis::List.new(notice_key(date))
+#     l << "#{object.class.to_s.underscore}:#{object.id}"
+#     notice_counter.incr
+#   end
+
+#   def pop_notice(date)
+#     l = Redis::List.new(notice_key(date))
+#     res = l.pop
+#     notice_counter.decr unless res
+#     res
+#   end
+
+#   private
+#   def notice_key(date)
+#     "user:#{self.id}:notice:#{date.strftime('%y%m%d')}"
+#   end
+# end
 
 
 
@@ -50,23 +75,53 @@ ActiveRecord::Base.establish_connection(
 # @newest.value = "tesaaaaaaaaat"
 # puts @newest.value['username']
 
+day = Date.today
+@list = Redis::List.new('sample_date', :marshal => true)
+@list << {:name => "Nate", :city => "San Diego", :date => "#{day}"}
+@list.each do |el|
+  puts "#{el[:name]} lives in #{el[:city]} #{el[:date]}"
+end
 
-# @list = Redis::List.new('list_name', :marshal => true)
-# @list << {:name => "Nate", :city => "San Diego"}
-# @list << {:name => "Peter", :city => "Oceanside", :cicle => "Oceanside", :city => "Oceanside", :city => "Oceanside"}
-# @list.each do |el|
-#   puts "#{el[:name]} lives in #{el[:city]} #{el[:cicle]}"
-# end
+
+uri = URI('http://weather.livedoor.com/forecast/webservice/json/v1?city=130010')
+p uri
+weather_data = JSON.parse(Net::HTTP.get(uri))
+p tomorrow_forecast = weather_data['forecasts'][1]
+forecast_message = "#{tomorrow_forecast['dateLabel']}の天気は#{tomorrow_forecast['telop']}です。" \
+  "最高気温は#{tomorrow_forecast['temperature']['max']['celsius']}度、" \
+  "最低気温は#{tomorrow_forecast['temperature']['min']['celsius']}度です。"
+
+description = weather_data['description']['text'].gsub(/\n/, '')
+p description
 # @list = Redis::List.new('list_name', :marshal => true)
 
 
 
 # @list = Redis::List.new('list_name')
 # @list << 'a'
-# @list << 'b'
-# @list.include? 'c'   # false
+# # @list << 'b'
+# # @list.include? 'c'   # false
 # p @list.values  # ['a','b']
-# @list << 'c'
+# @rlist = Redis::List.new('list_name', :marshal => true)
+
+# @rlist << {:name => "Nate", :city => "San Diego"}
+
+# @rlist.each do |el|
+#   puts "#{el[:name]} lives in #{el[:city]}"
+# # end
+
+# @hash = Redis::HashKey.new('hash_name')
+# @hash['a'] = 1
+# @hash['b'] = 2
+
+# @hash.each do |k,v|
+#   puts "#{k} = #{v}"
+# end
+
+# @hash['c'] = 3
+
+# puts @hash.all
+
 # @list.delete('c')
 # @list[0]
 # @list[0,1]
@@ -142,31 +197,3 @@ ActiveRecord::Base.establish_connection(
 # @user.notice_counter.incr # お知らせに追加があったとき
 # @user.notice_counter.decr # お知らせがpopされたとき
 # @user.notice_counter.reset # すべてのお知らせを消去したとき
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

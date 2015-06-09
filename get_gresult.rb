@@ -7,6 +7,14 @@ require "open-uri"
 require "cgi"
 require "pry"
 require "redis"
+require "json"
+require "redis-objects"
+require "rubygems"
+require "active_record"
+require'redis-namespace'
+require 'date'
+require 'net/http'
+require 'json'
 
 Mongoid.load!("/Users/jima/myruby/mongoid.yml", :development) # <=設定ファイルの読み込み（後述）
 
@@ -19,6 +27,11 @@ class Geturl
   # field :area, type: Array
   # field :created_at, :type => DateTime, :default => lambda{Time.now}
 end
+
+#redis 
+day = Date.today
+@list = Redis::List.new('sample_test_test', :marshal => true)
+
 
 
 n=0
@@ -67,10 +80,10 @@ next if "#{href}" !~ /^\/url/
 # puts ""
 link=URI.unescape("#{link}")
 
-tweet = {:id => 1, :user => "shin", :time => Time.now, :body => "hello redis!"}
+# tweet = {:id => 1, :user => "shin", :time => Time.now, :body => "hello redis!"}
 
 
-
+#mongodb
   geturl = Geturl.new
   geturl.keyword = "#{keyword}"
   geturl.address = "#{link}"
@@ -78,6 +91,7 @@ tweet = {:id => 1, :user => "shin", :time => Time.now, :body => "hello redis!"}
   geturl.save
 
 
+@list << {:keyword => "#{keyword}", :address => "#{link}", :domain => "#{link.split("/")[2]}", :day => "#{day}"}
 
 #dev
 # tweet = {:id => 2, 
