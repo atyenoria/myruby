@@ -1,8 +1,18 @@
 require 'mongoid'
 require 'pry' # binding.pry
-
+# binding.pry
 Mongoid.load!("/Users/jima/myruby/mongoid.yml", :development) # <=設定ファイルの読み込み（後述）
 
+
+class User
+  include Mongoid::Document	
+  include Mongoid::Timestamps
+  field :name, type: String
+  field :email, type: String
+  field :area, type: Array
+  # field :area, type: Array
+  # field :created_at, :type => DateTime, :default => lambda{Time.now}
+end
 
 
 
@@ -17,7 +27,7 @@ Mongoid.load!("/Users/jima/myruby/mongoid.yml", :development) # <=設定ファ�
 
 # p user
 
-# # 更新
+# # 更新/Users/jima/myruby/mongod_test.rb
 # user.update_attributes(
 #   email: "foo@example.com"
 # )
