@@ -75,24 +75,14 @@ ActiveRecord::Base.establish_connection(
 # @newest.value = "tesaaaaaaaaat"
 # puts @newest.value['username']
 
-day = Date.today
-@list = Redis::List.new('sample_date', :marshal => true)
-@list << {:name => "Nate", :city => "San Diego", :date => "#{day}"}
-@list.each do |el|
-  puts "#{el[:name]} lives in #{el[:city]} #{el[:date]}"
+@list = Redis::List.new('sample_test_test', :marshal => true)
+# @list << {:keyword => "#{keyword}", :address => "#{link}", :domain => "#{link.split("/")[2]}", :day => "#{day}"}
+
+@list.each do |l|
+  puts "#{l[:keyword]}  #{l[:link]}  #{l[:domain]}       #{l[:day]},"
 end
 
 
-uri = URI('http://weather.livedoor.com/forecast/webservice/json/v1?city=130010')
-p uri
-weather_data = JSON.parse(Net::HTTP.get(uri))
-p tomorrow_forecast = weather_data['forecasts'][1]
-forecast_message = "#{tomorrow_forecast['dateLabel']}の天気は#{tomorrow_forecast['telop']}です。" \
-  "最高気温は#{tomorrow_forecast['temperature']['max']['celsius']}度、" \
-  "最低気温は#{tomorrow_forecast['temperature']['min']['celsius']}度です。"
-
-description = weather_data['description']['text'].gsub(/\n/, '')
-p description
 # @list = Redis::List.new('list_name', :marshal => true)
 
 

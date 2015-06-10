@@ -47,7 +47,7 @@ end
 #   name: "hoge"
 # ).first
 
-  user = User.new
+er.new
   user.name = "中島"
   user.email = 21
   user.area = []
