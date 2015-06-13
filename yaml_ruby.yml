@@ -1,0 +1,13 @@
+user:
+ - name: hoge
+   pass: fuga
+   mails:
+    - hoge@example.com
+    - fuga@example.jp
+
+ - name: tarou
+   pass: yuuta
+   mails:
+    - taro@example.com
+    - yuta@example.jp
+

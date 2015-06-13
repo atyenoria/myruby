@@ -1,0 +1,2 @@
+describe MessageFilter do
+end
